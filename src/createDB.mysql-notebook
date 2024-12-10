@@ -1,0 +1,359 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "\\about\n# show DATABASES;\n\nDROP DATABASE IF EXISTS Clothing;\ncreate database Clothing;\nuse Clothing;\n\nCREATE TABLE User(\n    userID varchar(20) NOT NULL,\n    userPWD varchar(20) NOT NULL,\n    CONSTRAINT userIDPK PRIMARY KEY (userID)\n\n);\n\ninsert into User values('root','123456');\ninsert into User values('SimStudent','88888888');\n\nCREATE TABLE Clothes(\n    clothingID varchar(20) NOT NULL,    # 商品编号\n    clothingName varchar(20) NOT NULL,  # 商品名称\n    category varchar(20) NOT NULL,  # 商品类别\n    supplier varchar(20) NOT NULL,  # 供应商\n    units varchar(3) NOT NULL,   # 计价单位\n\n    CONSTRAINT clothingIDPK PRIMARY KEY (clothingID),\n\n    purchase int NOT NULL,  # 建议进货价\n    selling int NOT NULL,   # 建议零售价\n\n    inventory int NOT NULL # 库存\n);\n\nCREATE TABLE StockInRecord(\n    recordID int AUTO_INCREMENT PRIMARY KEY,\n    clothingID VARCHAR(20) NOT NULL,\n    quantity INT NOT NULL,\n    price DECIMAL(10,2) NOT NULL,\n    stockInDate DATETIME DEFAULT CURRENT_TIMESTAMP,\n    FOREIGN KEY (clothingID) REFERENCES Clothes(clothingID)\n);\n\nCREATE TABLE StockOutRecord (\n    recordID INT AUTO_INCREMENT PRIMARY KEY,  -- 记录编号\n    clothingID VARCHAR(20) NOT NULL,          -- 商品编号\n    quantity INT NOT NULL,                    -- 出货数量\n    price DECIMAL(10, 2) NOT NULL,            -- 实际的出货价格\n    stockOutDate DATETIME DEFAULT CURRENT_TIMESTAMP, -- 出货日期\n    FOREIGN KEY (clothingID) REFERENCES Clothes(clothingID)\n);\n\nINSERT INTO Clothes (clothingID, clothingName, category, supplier, units, purchase, selling, inventory) VALUES\n('C001', '牛仔小孩T恤', '上衣', '广州小孩服装城', '件', 50, 100, 150),\n('C002', '酷炫男孩工装裤', '裤子', '东莞理工学院', '条', 80, 150, 100),\n('C003', '宝宝安睡蓝色卫衣', '上衣', '广州小孩服装城', '件', 60, 120, 200),\n('C004', '金工实习专用皮靴', '鞋子', '东莞理工学院', '双', 120, 200, 80),\n('C014', '樱花和服', '和服', '叠纸服装有限公司', '件', 150, 300, 50),\n('C015', '星空晚礼服', '晚礼服', '叠纸服装有限公司', '件', 200, 400, 30),\n('C016', '学院风制服', '制服', '叠纸服装有限公司', '件', 120, 240, 70),\n('C017', '夏日泳装', '泳装', '叠纸服装有限公司', '套', 80, 160, 100),\n('C005', '贵族套装', '套装', '叠纸服装有限公司', '套', 250, 500, 20),\n('C006', '运动休闲服', '休闲服', '叠纸服装有限公司', '套', 90, 180, 60),\n('C007', '复古旗袍', '旗袍', '叠纸服装有限公司', '件', 180, 360, 40),\n('C008', '时尚牛仔夹克', '夹克', '叠纸服装有限公司', '件', 110, 220, 80),\n('C009', '公主裙', '裙子', '叠纸服装有限公司', '件', 160, 320, 55),\n('C010', '工装外套', '外套', '叠纸服装有限公司', '件', 130, 260, 45),\n('C011', '樱花衬衫', '衬衫', '叠纸服装有限公司', '件', 95, 190, 65),\n('C012', '蕾丝裙', '裙子', '叠纸服装有限公司', '件', 140, 280, 50),\n('C013', '皮夹克', '夹克', '叠纸服装有限公司', '件', 125, 250, 75);\n\n\nINSERT INTO StockInRecord (clothingID, quantity, price, stockInDate) VALUES\n('C001', 30, 55.00, '2023-10-01 09:00:00'),\n('C002', 20, 85.00, '2023-10-02 10:30:00'),\n('C003', 40, 65.00, '2023-10-03 11:45:00'),\n('C004', 15, 125.00, '2023-10-04 13:15:00'),\n('C014', 10, 155.00, '2023-10-05 14:30:00'),\n('C015', 5, 205.00, '2023-10-06 15:45:00'),\n('C016', 25, 125.00, '2023-10-07 16:00:00'),\n('C017', 20, 85.00, '2023-10-08 17:15:00'),\n('C005', 10, 255.00, '2023-10-09 18:30:00'),\n('C006', 30, 95.00, '2023-10-10 19:45:00'),\n('C007', 20, 185.00, '2023-10-11 20:00:00'),\n('C008', 15, 115.00, '2023-10-12 21:15:00'),\n('C009', 10, 165.00, '2023-10-13 22:30:00'),\n('C010', 25, 135.00, '2023-10-14 23:45:00'),\n('C011', 30, 100.00, '2023-10-15 00:00:00'),\n('C012', 15, 145.00, '2023-10-16 01:15:00'),\n('C013', 20, 130.00, '2023-10-17 02:30:00');\n\n\nINSERT INTO StockOutRecord (clothingID, quantity, price, stockOutDate) VALUES\n('C001', 10, 105.00, '2023-10-01 10:00:00'),\n('C002', 5, 155.00, '2023-10-02 11:30:00'),\n('C003', 20, 125.00, '2023-10-03 12:45:00'),\n('C004', 5, 205.00, '2023-10-04 14:15:00'),\n('C014', 3, 305.00, '2023-10-05 15:30:00'),\n('C015', 2, 405.00, '2023-10-06 16:45:00'),\n('C016', 15, 245.00, '2023-10-07 17:00:00'),\n('C017', 10, 165.00, '2023-10-08 18:15:00'),\n('C005', 5, 505.00, '2023-10-09 19:30:00'),\n('C006', 10, 185.00, '2023-10-10 20:45:00'),\n('C007', 10, 365.00, '2023-10-11 21:00:00'),\n('C008', 5, 225.00, '2023-10-12 22:15:00'),\n('C009', 5, 325.00, '2023-10-13 23:30:00'),\n('C010', 10, 265.00, '2023-10-14 00:45:00'),\n('C011', 10, 195.00, '2023-10-15 01:00:00'),\n('C012', 5, 285.00, '2023-10-16 02:15:00'),\n('C013', 10, 255.00, '2023-10-17 03:30:00');\n\n\n\n\n",
+    "options": {
+        "tabSize": 4,
+        "indentSize": 4,
+        "insertSpaces": true,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": false,
+                "selectionStart": {
+                    "lineNumber": 110,
+                    "column": 1
+                },
+                "position": {
+                    "lineNumber": 110,
+                    "column": 1
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 96,
+                "column": 1
+            },
+            "firstPositionDeltaTop": -18
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 2,
+                            "content": "Welcome to the MySQL Shell - DB Notebook.\n\nPress Ctrl+Enter to execute the code block.\n\nExecute \\sql to switch to SQL, \\js to JavaScript and \\ts to TypeScript mode.\nExecute \\help or \\? for help;",
+                            "language": "ansi"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 6
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 109,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "2b712d77-aaf5-4303-a715-d17ca0ec4598",
+                            "content": "OK, 4 rows affected in 23.352ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 1,
+                            "resultId": "8ddd4096-4aab-4b2f-ef68-1b263fee874e",
+                            "content": "OK, 1 row affected in 1.993ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 2,
+                            "resultId": "58f99786-7196-482e-bdcf-08342b48782f",
+                            "content": "OK, 0 records retrieved in 1.004ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 3,
+                            "resultId": "746e455f-a4af-4d2b-932d-eb128242d66d",
+                            "content": "OK, 0 records retrieved in 10.963ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 4,
+                            "resultId": "904661dd-5415-468b-cb20-39dcd3874bea",
+                            "content": "OK, 1 row affected in 2.991ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 5,
+                            "resultId": "d372cdfc-9d7c-4d73-fbfe-db1670eb0dbf",
+                            "content": "OK, 1 row affected in 0.99ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 6,
+                            "resultId": "89ab674b-7d97-4d07-b016-512536cda49b",
+                            "content": "OK, 0 records retrieved in 8.608ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 7,
+                            "resultId": "09fb4b14-8a07-4659-9d69-7e2c32aafc3e",
+                            "content": "OK, 0 records retrieved in 18.707ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 8,
+                            "resultId": "7ea416d1-6227-4b01-ace1-ee7000d3490b",
+                            "content": "OK, 0 records retrieved in 17.383ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 9,
+                            "resultId": "644c8e99-32e9-46d6-8fcc-9c98e0e0cd0c",
+                            "content": "OK, 17 rows affected in 2.676ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 10,
+                            "resultId": "9141f838-0677-423a-da5b-f39a730d008d",
+                            "content": "OK, 17 rows affected in 2.924ms"
+                        },
+                        {
+                            "type": 4,
+                            "index": 11,
+                            "resultId": "a0f0158b-34c5-4c6a-ca42-ba406ccdf072",
+                            "content": "OK, 17 rows affected in 1.856ms"
+                        }
+                    ]
+                },
+                "currentHeight": 228.796875,
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 52
+                        },
+                        "contentStart": 20,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 52,
+                            "length": 26
+                        },
+                        "contentStart": 53,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 78,
+                            "length": 14
+                        },
+                        "contentStart": 79,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 92,
+                            "length": 136
+                        },
+                        "contentStart": 94,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 228,
+                            "length": 43
+                        },
+                        "contentStart": 230,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 271,
+                            "length": 50
+                        },
+                        "contentStart": 272,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 321,
+                            "length": 406
+                        },
+                        "contentStart": 323,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 727,
+                            "length": 287
+                        },
+                        "contentStart": 729,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1014,
+                            "length": 374
+                        },
+                        "contentStart": 1016,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1388,
+                            "length": 1056
+                        },
+                        "contentStart": 1390,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2444,
+                            "length": 837
+                        },
+                        "contentStart": 2447,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 3281,
+                            "length": 837
+                        },
+                        "contentStart": 3284,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 4118,
+                            "length": 3
+                        },
+                        "contentStart": 4117,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 110,
+                "end": 110,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 111,
+                "end": 111,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 112,
+                "end": 112,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 113,
+                "end": 113,
+                "language": "mysql",
+                "currentSet": 1,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}
