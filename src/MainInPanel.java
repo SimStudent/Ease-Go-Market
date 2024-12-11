@@ -232,12 +232,25 @@ class MainInPanel extends JPanel implements Observable {
     public ClothesTable getClothesTable() { return clothesTable; }
 }
 
+
 /*
  * 
- * This is Main Out Panel
  * 
  * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
+
+
+
+
  */
+
+
 class MainOutPanel extends JPanel implements Observable {
 
     private ClothesTable clothesTable; // 显示商品信息的表格
@@ -459,6 +472,283 @@ class MainOutPanel extends JPanel implements Observable {
     }
     public ClothesTable getClothesTable() { return clothesTable; }
 }
+
+
+/*
+ * 
+ * This is Main Insert Panel
+ * 
+ * 
+ */
+
+
+
+
+
+
+
+
+class MainInsertPanel extends JPanel implements Observable {
+
+    private ClothesTable clothesTable; // 显示商品信息的表格
+
+    // 窗体组件
+    protected JTextField tfProductCode, tfPurchaseQuantity, tfStockOutValue;
+    protected JTextField tfProductName, tfCategory, tfSupplier;
+    protected JTextField tfSellPrice, tfPurchasePrice, tfChargeUnit, tfStock, tfStockValue;
+    protected JLabel lblTotalPrice;
+
+    private ArrayList<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
+
+
+
+    MainInsertPanel(){
+        super(new BorderLayout());
+
+
+        // TODO 完全参数化
+        clothesTable = new ClothesTable(Clothes.columnNames_cn);
+        clothesTable.printTable();
+        JScrollPane scrollPane = new JScrollPane(clothesTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // 底部的操作区域
+        JPanel actionPanel = new JPanel(null);
+        actionPanel.setPreferredSize(new Dimension(800, 200));
+        add(actionPanel, BorderLayout.SOUTH);
+
+        /////
+        JLabel lblPurchaseQuantity = new JLabel("出入库数量");
+        lblPurchaseQuantity.setBounds(20, 10, 80, 25);  
+        actionPanel.add(lblPurchaseQuantity);
+
+        tfPurchaseQuantity = new JTextField(10);
+        tfPurchaseQuantity.setBounds(100, 10, 100, 25);
+        tfPurchaseQuantity.setEditable(false);   
+        actionPanel.add(tfPurchaseQuantity);
+
+
+        JLabel lblStockOutValue = new JLabel("出入库单价");
+        lblStockOutValue.setBounds(220, 10, 80, 25);    
+        actionPanel.add(lblStockOutValue);
+
+        tfStockOutValue = new JTextField(10);
+        tfStockOutValue.setBounds(300, 10, 100, 25);
+        tfStockOutValue.setEditable(false);  
+        actionPanel.add(tfStockOutValue);
+
+        JLabel lblProductCode = new JLabel("服装编号");
+        lblProductCode.setBounds(420, 10, 80, 25);
+        actionPanel.add(lblProductCode);
+
+        tfProductCode = new JTextField(10);
+        tfProductCode.setBounds(520, 10, 100, 25);
+        actionPanel.add(tfProductCode);
+
+        JButton btnSearch = new JButton("搜索");
+        btnSearch.setBounds(640, 10, 80, 25);
+        actionPanel.add(btnSearch);
+
+        // JButton btnClear = new JButton("清空");
+        // btnClear.setBounds(520, 10, 80, 25);
+        // actionPanel.add(btnClear);
+
+        JLabel lblProductName = new JLabel("服装名称");
+        lblProductName.setBounds(20, 50, 80, 25);
+        actionPanel.add(lblProductName);
+
+        tfProductName = new JTextField(10);
+        tfProductName.setBounds(100, 50, 100, 25);
+        actionPanel.add(tfProductName);
+
+        JLabel lblCategory = new JLabel("服装类别");
+        lblCategory.setBounds(220, 50, 80, 25);
+        actionPanel.add(lblCategory);
+
+        tfCategory = new JTextField(10);
+        tfCategory.setBounds(300, 50, 100, 25);
+        actionPanel.add(tfCategory);
+
+        JLabel lblSupplier = new JLabel("服装供应商");
+        lblSupplier.setBounds(420, 50, 80, 25);
+        actionPanel.add(lblSupplier);
+
+        tfSupplier = new JTextField(10);
+        tfSupplier.setBounds(520, 50, 100, 25);
+        actionPanel.add(tfSupplier);
+
+        JButton btnStockOut = new JButton("添加");
+        btnStockOut.setBounds(640, 50, 80, 25);
+        actionPanel.add(btnStockOut);
+
+        /* 第三行 */
+        JLabel lblSellPrice = new JLabel("建议零售价");
+        lblSellPrice.setBounds(20, 90, 80, 25);
+        actionPanel.add(lblSellPrice);
+
+        tfSellPrice = new JTextField(10);
+        tfSellPrice.setBounds(100, 90, 100, 25);
+        actionPanel.add(tfSellPrice);
+
+        JLabel lblPurchasePrice = new JLabel("建议进货价");
+        lblPurchasePrice.setBounds(220, 90, 80, 25);
+        actionPanel.add(lblPurchasePrice);
+
+        tfPurchasePrice = new JTextField(10);
+        tfPurchasePrice.setBounds(300, 90, 100, 25);
+        actionPanel.add(tfPurchasePrice);
+
+        JLabel lblChargeUnit = new JLabel("计价单位");
+        lblChargeUnit.setBounds(420, 90, 80, 25);
+        actionPanel.add(lblChargeUnit);
+
+        tfChargeUnit = new JTextField(10);
+        tfChargeUnit.setBounds(520, 90, 100, 25);
+        actionPanel.add(tfChargeUnit);
+
+        JButton btnResetComponent = new JButton("重置");
+        btnResetComponent.setBounds(640, 90, 80, 25);
+        actionPanel.add(btnResetComponent);
+
+
+        JLabel lblStock = new JLabel("库存数量");
+        lblStock.setBounds(20, 130, 80, 25);
+        actionPanel.add(lblStock);
+
+        tfStock = new JTextField(10);
+        tfStock.setBounds(100, 130, 100, 25);
+        tfStock.setEditable(false);
+        actionPanel.add(tfStock);
+
+
+
+        clothesTable.readData();
+        // 事件绑定
+        btnSearch.addActionListener(e -> searchProduct());
+        btnStockOut.addActionListener(e -> insertProduct());
+        btnResetComponent.addActionListener(e -> resetComponent());
+        // btnClear.addActionListener(e -> clearFields());
+        // btnConfirm.addActionListener(e -> confirmSale());
+        // btnCancel.addActionListener(e -> JOptionPane.showMessageDialog(this, "销售已取消！"));
+    }
+
+    private void searchProduct() {
+        String productCode = tfProductCode.getText().trim();
+        for (Clothes clothes : clothesTable.readData()) {
+            if (clothes.getClothingID().equals(productCode)) {
+                tfProductName.setText(clothes.getClothingName());
+                tfCategory.setText(clothes.getCategory());
+                tfSupplier.setText(clothes.getSupplier());
+                tfSellPrice.setText(String.valueOf(clothes.getSelling()));
+                tfPurchasePrice.setText(String.valueOf(clothes.getPurchase()));
+                tfChargeUnit.setText(clothes.getUnits());
+                tfStock.setText(String.valueOf(clothes.getInventory()));
+
+            }
+        }
+    }
+
+    // private void stockOutProduct(StockOutRecordPanel stockOutRecordPanel) {
+    private void insertProduct() {
+
+        if (tfProductCode.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入服装编号！");
+            return;
+        }
+        if (tfCategory.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入服装种类！");
+            return;
+        }
+        if (tfSupplier.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入服装供应商！");
+            return;
+        }
+        if (tfProductName.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入服装名称！");
+            return;
+        }
+        if (tfSellPrice.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入建议零售价！");
+            return;
+        }
+        if (tfPurchasePrice.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入建议采购价！");
+            return;
+        }
+        if (tfChargeUnit.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入计价单位！");
+            return;
+        }
+        if (tfStock.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "请输入库存数量！");
+            return;
+        }
+
+        try {
+            double sellPrice = Double.parseDouble(tfSellPrice.getText().trim());
+            double purchasePrice = Double.parseDouble(tfPurchasePrice.getText().trim());
+            // int stock = Integer.parseInt(tfStock.getText().trim());
+    
+            Clothes newClothes = new Clothes(
+                tfProductCode.getText().trim(),
+                tfProductName.getText().trim(),
+                tfCategory.getText().trim(),
+                tfSupplier.getText().trim(),
+                tfChargeUnit.getText().trim(),
+                purchasePrice,
+                sellPrice,
+                0  // stock
+            );
+    
+            Boolean isInserted = clothesTable.insert(newClothes);
+            if (!isInserted) {
+                JOptionPane.showMessageDialog(this, "商品插入失败，请检查变量以重新输入！", "错误", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "添加成功！", "提示", JOptionPane.INFORMATION_MESSAGE);
+                notifyObservers();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "价格或库存数量输入格式不正确，请检查！", "错误", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void resetComponent() {
+        tfProductCode.setText("");
+        tfProductName.setText("");
+        tfCategory.setText("");
+        tfSupplier.setText("");
+        tfSellPrice.setText("");
+        tfPurchasePrice.setText("");
+        tfChargeUnit.setText("");
+        tfStock.setText("");
+        tfStockOutValue .setText("");
+        tfPurchaseQuantity.setText("");
+    }
+    public ClothesTable getClothesTable() { return clothesTable; }
+}
+
+
+
+
+
+
 
 
 class StockInRecordPanel extends JPanel {

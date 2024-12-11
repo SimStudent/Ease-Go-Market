@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -146,24 +147,6 @@ public class ClothesTable extends InventoryTable implements Observer {
     }
 
     public Boolean stockIn(String clothingID, int quantity,double value){
-        // 添加数量检测，如果查询 知道库中存在，就进行出库，否则报错
-        // try{
-        //     Connection conn = new LocalhostJDBC().getConnection();
-        //     Statement stmt = conn.createStatement();
-        //     String sql = "select inventory from clothes where clothingID = '" + clothingID + "'";
-        //     ResultSet rs = stmt.executeQuery(sql);
-        //     if(rs.next()){
-        //         int inventory = rs.getInt(1);
-        //         if(inventory < quantity){
-        //             System.out.println("库存不足！");
-        //             return false;
-        //         }
-        //     }
-        // }
-        // catch(Exception e){
-        //     e.printStackTrace();
-        // }
-
         try{
             // 创立连接
             Connection conn = new LocalhostJDBC().getConnection();
@@ -181,6 +164,32 @@ public class ClothesTable extends InventoryTable implements Observer {
         }
 
         return false;
+    }
+
+
+    //INSERT INTO Clothes (clothingID, clothingName, category, supplier, units, purchase, selling, inventory) VALUES
+    //('C001', '牛仔小孩T恤', '上衣', '广州小孩服装城', '件', 50, 100, 150),
+    public Boolean insert(Clothes clothes){
+        String sql = "INSERT INTO Clothes (clothingID, clothingName, category, supplier, units, purchase, selling, inventory) " +
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = new LocalhostJDBC().getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, clothes.getClothingID());
+            pstmt.setString(2, clothes.getClothingName());
+            pstmt.setString(3, clothes.getCategory());
+            pstmt.setString(4, clothes.getSupplier());
+            pstmt.setString(5, clothes.getUnits());
+            pstmt.setDouble(6, clothes.getPurchase());
+            pstmt.setDouble(7, clothes.getSelling());
+            pstmt.setInt(8, clothes.getInventory());
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 

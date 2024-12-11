@@ -1,7 +1,7 @@
-import java.awt.BorderLayout;
-
 import javax.swing.*;
-
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Main extends JFrame {
 
@@ -49,6 +49,10 @@ public class Main extends JFrame {
         MainOutPanel stockOutPanel = new MainOutPanel();
         tabbedPane.addTab("出库操作", stockOutPanel);
 
+        // 添加商品面板
+        MainInsertPanel insertPanel = new MainInsertPanel();
+        tabbedPane.addTab("添加服装", insertPanel);
+
         // 入库记录面板
         StockInRecordPanel stockInRecordPanel = new StockInRecordPanel();
         tabbedPane.addTab("入库记录", stockInRecordPanel);
@@ -61,16 +65,28 @@ public class Main extends JFrame {
         stockInPanel.addObserver(stockOutRecordPanel.getStockOutRecordTable());
         stockInPanel.addObserver(stockInPanel.getClothesTable());
         stockInPanel.addObserver(stockOutPanel.getClothesTable());
+        stockInPanel.addObserver(insertPanel.getClothesTable());
         
         // 注册 stockOutPanel 的观察者
         stockOutPanel.addObserver(stockInRecordPanel.getStockInRecordTable());
         stockOutPanel.addObserver(stockOutRecordPanel.getStockOutRecordTable());
         stockOutPanel.addObserver(stockInPanel.getClothesTable());
-         stockOutPanel.addObserver(stockOutPanel.getClothesTable());
+        stockOutPanel.addObserver(stockOutPanel.getClothesTable());
+        stockOutPanel.addObserver(insertPanel.getClothesTable());
+
+        // 注册 insertPanel 的观察者
+        insertPanel.addObserver(stockInRecordPanel.getStockInRecordTable());
+        insertPanel.addObserver(stockOutRecordPanel.getStockOutRecordTable());
+        insertPanel.addObserver(stockInPanel.getClothesTable());
+        insertPanel.addObserver(stockOutPanel.getClothesTable());
+        insertPanel.addObserver(insertPanel.getClothesTable());
     }
 
     public static void main(String[] args) {
+        new LoginUI();
         SwingUtilities.invokeLater(() -> new Main());
     }
 }
+
+
 
